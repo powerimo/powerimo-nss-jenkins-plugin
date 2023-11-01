@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.steps;
 
 import hudson.EnvVars;
 import hudson.Launcher;
@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powerimo.jenkins.nss.TestVirtualChannel;
 
 import java.io.IOException;
 import java.io.PrintStream;

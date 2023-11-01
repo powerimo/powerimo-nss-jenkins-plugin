@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.steps;
 
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -12,7 +12,7 @@ import org.powerimo.common.utils.Utils;
 import java.util.UUID;
 
 public class NssSendTextStepTest extends BaseTest {
-    private NssSendTextStep.NssSendTextStepExecutor stepExecution;
+    private NssSendTextStep.Execution stepExecution;
 
     @Rule
     public JenkinsRule jenkinsRule = new JenkinsRule();
@@ -39,7 +39,7 @@ public class NssSendTextStepTest extends BaseTest {
         final String apiKey = UUID.randomUUID() + ":mySecret";
         final NssSendTextStep step = new NssSendTextStep("aaa");
         step.setDryRun(true);
-        stepExecution = new NssSendTextStep.NssSendTextStepExecutor(step, contextMock);
+        stepExecution = new NssSendTextStep.Execution(step, contextMock);
 
         // Execute and assert Test.
         var result = stepExecution.run();
@@ -53,7 +53,7 @@ public class NssSendTextStepTest extends BaseTest {
         final NssSendTextStep step = new NssSendTextStep("aaa");
         step.setApiKey(UUID.randomUUID() + ":secret");
         step.setDryRun(false);
-        stepExecution = new NssSendTextStep.NssSendTextStepExecutor(step, contextMock);
+        stepExecution = new NssSendTextStep.Execution(step, contextMock);
 
         // Execute and assert Test.
         var result = stepExecution.run();

@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.steps;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +26,30 @@ public abstract class BaseNssStep extends Step implements Serializable {
     @Setter
     private String apiKey;
 
+    @DataBoundSetter
+    @Getter
+    @Setter
+    private String typeNotification = "DEPLOY";
+
+    @DataBoundSetter
+    @Getter
+    @Setter
+    private String transports = "EMAIL;TELEGRAM";
+
+    @DataBoundSetter
+    @Getter
+    @Setter
+    private String groups;
+
+    @DataBoundSetter
+    @Getter
+    @Setter
+    private String recipients;
+
+    @DataBoundSetter
+    @Getter
+    @Setter
+    private String caption = "The job has been completed successfully";
 
     protected String getAccountIdStringFromApiKey() {
         return getAccountPartFromApiKey(apiKey);

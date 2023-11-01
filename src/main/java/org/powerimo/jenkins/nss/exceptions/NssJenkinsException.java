@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.exceptions;
 
 public class NssJenkinsException extends RuntimeException {
     public NssJenkinsException() {

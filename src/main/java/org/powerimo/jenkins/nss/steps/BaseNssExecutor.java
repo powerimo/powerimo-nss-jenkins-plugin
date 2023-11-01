@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.steps;
 
 import hudson.EnvVars;
 import hudson.Launcher;
@@ -16,6 +16,9 @@ import okhttp3.OkHttpClient;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.powerimo.http.okhttp.StdPayloadConverter;
+import org.powerimo.jenkins.nss.exceptions.NssJenkinsException;
+import org.powerimo.jenkins.nss.PluginConst;
+import org.powerimo.nss.api.NssRequest;
 import org.powerimo.nss.api.client.NssHttpClientLocalConfig;
 import org.powerimo.nss.httpclient.NssHttpClient;
 
@@ -155,5 +158,17 @@ public abstract class BaseNssExecutor<T> extends StepExecution {
         } catch (Exception ex) {
             throw new IllegalArgumentException(PluginConst.ENV_VAR_API_KEY + " environment variable doesn't contains a valid account ID (UUID)" );
         }
+    }
+
+    protected NssRequest sendRequest(NssRequest request) {
+        listener.getLogger().println("Request: " + request.toString());
+        NssRequest sent;
+        if (step.isDryRun()) {
+            sent = request;
+        } else {
+            sent = nssHttpClient.sendRequest(request);
+        }
+        listener.getLogger().println("Result: " + sent.toString());
+        return sent;
     }
 }

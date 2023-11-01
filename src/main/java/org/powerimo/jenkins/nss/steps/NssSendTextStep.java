@@ -1,4 +1,4 @@
-package org.powerimo.jenkins.nss;
+package org.powerimo.jenkins.nss.steps;
 
 import com.google.common.collect.ImmutableSet;
 import hudson.EnvVars;
@@ -9,12 +9,10 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
-import lombok.Setter;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 import org.powerimo.nss.api.NssRequest;
 
 import java.io.IOException;
@@ -26,31 +24,6 @@ public class NssSendTextStep extends BaseNssStep {
 
     @Getter
     private final String text;
-
-    @DataBoundSetter
-    @Getter
-    @Setter
-    private String typeNotification;
-
-    @DataBoundSetter
-    @Getter
-    @Setter
-    private String transports;
-
-    @DataBoundSetter
-    @Getter
-    @Setter
-    private String groups;
-
-    @DataBoundSetter
-    @Getter
-    @Setter
-    private String recipients;
-
-    @DataBoundSetter
-    @Getter
-    @Setter
-    private String caption;
 
     @Extension
     public static class DescriptorImpl extends StepDescriptor {
@@ -73,13 +46,13 @@ public class NssSendTextStep extends BaseNssStep {
 
     @Override
     public StepExecution start(StepContext context) throws Exception {
-        return new NssSendTextStepExecutor(this, context);
+        return new Execution(this, context);
     }
 
-    public static class NssSendTextStepExecutor extends BaseNssExecutor {
+    public static class Execution extends BaseNssExecutor {
         private static final long serialVersionUID = -7371513693684974467L;
 
-        protected NssSendTextStepExecutor(BaseNssStep step, @Nonnull StepContext context) throws InterruptedException, IOException {
+        protected Execution(BaseNssStep step, @Nonnull StepContext context) throws InterruptedException, IOException {
             super(step, context);
         }
 
@@ -94,7 +67,6 @@ public class NssSendTextStep extends BaseNssStep {
         protected Object run() {
             var text = getMyStep().getText();
 
-            NssRequest sent;
             NssRequest prepared = NssRequest.builder()
                     .caption(getMyStep().getCaption())
                     .typeNotification(getMyStep().getTypeNotification())
@@ -103,16 +75,7 @@ public class NssSendTextStep extends BaseNssStep {
                     .groups(getMyStep().getGroups())
                     .message(text)
                     .build();
-            listener.getLogger().println("Request: " + prepared.toString());
-            if (step.isDryRun()) {
-                listener.getLogger().println("Dry Run: text for sending: " + text);
-                sent = prepared;
-            } else {
-                sent = nssHttpClient.sendRequest(prepared);
-            }
-
-            listener.getLogger().println("Result: " + sent.toString());
-            return sent;
+            return sendRequest(prepared);
         }
     }
 
